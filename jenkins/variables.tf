@@ -13,7 +13,7 @@ variable "key_name" {
 variable "sec_group_name" {
   type        = string
   description = "Please provide a sec group name for instances"
-  default     = "r1soft_server_sec_group"
+  default     = "jenkins_server_sec_group"
 }
 
 variable "instance_type" {
