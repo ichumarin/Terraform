@@ -20,6 +20,13 @@ resource "aws_security_group" "jenkins_server_tls" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
+  ingress {
+    description = "HTTP"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
   egress {
     from_port   = 0
     to_port     = 0
@@ -70,6 +77,11 @@ resource "null_resource" "commands" {
       "sudo systemctl start jenkins",
       "sudo systemctl enable jenkins",
       "sudo systemctl status jenkins",
+      "sudo yum install firewalld -y"
+      sudo systemctl start firewalld
+      sudo systemctl enable firewalld
+      # "sudo iptables -A PREROUTING -t nat -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 8080",
+      # "sudo iptables-save > /etc/sysconfig/iptables"
 
     ]
   }

@@ -22,9 +22,5 @@ variable "instance_type" {
    default = "t2.micro" 
 }
 
-# variable "r1soft_login" {
-#     type = string 
-#     description = "please provide user name and password for r1soft-server"
-# }
-# AKS Farukh how to assign user name and password in variable too 
+
 
