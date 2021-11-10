@@ -20,13 +20,6 @@ resource "aws_security_group" "jenkins_server_tls" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
-  ingress {
-    description = "HTTP"
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
   egress {
     from_port   = 0
     to_port     = 0
@@ -43,7 +36,7 @@ resource "aws_instance" "jenkins_server" {
 }
 
 resource "null_resource" "commands" {
-  depends_on = [aws_instance.jenkins_server, aws_security_group.jenkins_server_tls]
+  depends_on = [aws_instance.jenkins_server, aws_security_group.jenkins_server_tls, aws_route53_record.jenkins]
   triggers = {
     always_run = timestamp()
   }
@@ -68,21 +61,32 @@ resource "null_resource" "commands" {
     }
     inline = [
       "sudo cp /tmp/jenkins.repo /etc/yum.repos.d/jenkins.repo",
-      "sudo yum update -y",
       "sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key",
-      "sudo yum upgrade",
       "sudo yum install epel-release java-11-openjdk-devel -y",
       "sudo yum install jenkins -y",
       "sudo systemctl daemon-reload",
       "sudo systemctl start jenkins",
-      "sudo systemctl enable jenkins",
-      "sudo systemctl status jenkins",
-      "sudo yum install firewalld -y"
-      sudo systemctl start firewalld
-      sudo systemctl enable firewalld
-      # "sudo iptables -A PREROUTING -t nat -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 8080",
-      # "sudo iptables-save > /etc/sysconfig/iptables"
+      " echo -e $(tput setaf 1 )'Jenkins Administrotor Password is: '$(tput sgr0) $(tput setaf 2)`sudo cat /var/lib/jenkins/secrets/initialAdminPassword`$(tput sgr0)",
 
     ]
   }
 }
+
+# resource "null_resource" "admin_password" {
+#   depends_on = [null_resource.commands]
+#   triggers = {
+#     always_run = timestamp()
+#   }
+#   provisioner "remote-exec" {
+#     connection {
+#       host        = aws_instance.jenkins_server.public_ip
+#       type        = "ssh"
+#       user        = "centos"
+#       private_key = file("~/.ssh/id_rsa")
+#     }
+#     inline = [
+#         " echo -e $(tput setaf 1 )'Jenkins Administrotor Password is: '$(tput sgr0) $(tput setaf 2)`sudo cat /var/lib/jenkins/secrets/initialAdminPassword`$(tput sgr0)",
+
+#     ]
+#   }
+# }
