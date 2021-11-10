@@ -66,8 +66,8 @@ resource "null_resource" "commands" {
       "sudo yum install jenkins -y",
       "sudo systemctl daemon-reload",
       "sudo systemctl start jenkins",
-      " echo -e $(tput setaf 1 )'Jenkins Administrotor Password is: '$(tput sgr0) $(tput setaf 2)`sudo cat /var/lib/jenkins/secrets/initialAdminPassword`$(tput sgr0)",
-
+      "sudo cp /var/lib/jenkins/secrets/initialAdminPassword /tmp/password",
+      "echo -e $(tput setaf 1 )'Jenkins Administrotor Password is: '$(tput sgr0) $(tput setaf 2)`sudo cat /tmp/password`$(tput sgr0)",
     ]
   }
 }
