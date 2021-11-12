@@ -47,7 +47,7 @@ resource "null_resource" "commands" {
   triggers = {
     always_run = timestamp()
   }
- 
+
   # Execute linux commands on remote machine
   provisioner "remote-exec" {
     connection {
@@ -57,10 +57,7 @@ resource "null_resource" "commands" {
       private_key = file("~/.ssh/id_rsa")
     }
     inline = [
-      "sudo yum install wget -y",
-      "sudo wget -O /tmp/xi-latest.tar.gz  https://assets.nagios.com/downloads/nagiosxi/xi-latest.tar.gz",
-      "sudo  /tmp/tar xzf xi-latest.tar.gz",
-      "sudo bash /tmp/nagiosxi/fullinstall"
+      "curl https://assets.nagios.com/downloads/nagiosxi/install.sh | sudo sh"
     ]
   }
 }

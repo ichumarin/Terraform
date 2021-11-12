@@ -17,8 +17,8 @@ variable "sec_group_name" {
 }
 
 variable "instance_type" {
-    type        = string
-    description = "Please provide an instance type"
-   default = "t2.micro" 
+  type        = string
+  description = "Please provide an instance type"
+  default     = "t2.micro"
 }
 
