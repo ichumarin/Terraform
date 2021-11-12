@@ -71,22 +71,3 @@ resource "null_resource" "commands" {
     ]
   }
 }
-
-# resource "null_resource" "admin_password" {
-#   depends_on = [null_resource.commands]
-#   triggers = {
-#     always_run = timestamp()
-#   }
-#   provisioner "remote-exec" {
-#     connection {
-#       host        = aws_instance.jenkins_server.public_ip
-#       type        = "ssh"
-#       user        = "centos"
-#       private_key = file("~/.ssh/id_rsa")
-#     }
-#     inline = [
-#         " echo -e $(tput setaf 1 )'Jenkins Administrotor Password is: '$(tput sgr0) $(tput setaf 2)`sudo cat /var/lib/jenkins/secrets/initialAdminPassword`$(tput sgr0)",
-
-#     ]
-#   }
-# }
